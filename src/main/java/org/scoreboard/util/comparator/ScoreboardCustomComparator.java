@@ -7,6 +7,6 @@ import java.util.Comparator;
 public class ScoreboardCustomComparator implements Comparator<ScoreboardIndex> {
     public int compare(ScoreboardIndex s1, ScoreboardIndex s2)
     {
-        return 0;
+        return s2.getMatchStartDate().compareTo(s1.getMatchStartDate());
     }
 }

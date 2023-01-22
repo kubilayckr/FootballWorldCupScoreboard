@@ -17,21 +17,35 @@ public class ScoreboardRepository {
     }
 
     public Match addMatch(Match match) {
-        return null;
+        match.setVersion(1);
+        ScoreboardIndex scoreboardIndex = new ScoreboardIndex(match.getId(), match.getMatchStartDate());
+        tableScoreboard.put(scoreboardIndex, match);
+        return match;
     }
 
     public Match updateMatch(Match match) {
-        return null;
+        ScoreboardIndex scoreboardIndex = new ScoreboardIndex(match.getId(), match.getMatchStartDate());
+        Match existingMatch = tableScoreboard.get(scoreboardIndex);
+        mapper.update(existingMatch, match);
+        existingMatch.setVersion(existingMatch.getVersion()+1);
+        return existingMatch;
     }
 
     public void deleteMatch(Match match) {
+        ScoreboardIndex scoreboardIndex = new ScoreboardIndex(match.getId(), match.getMatchStartDate());
+        tableScoreboard.remove(scoreboardIndex);
     }
 
     public Match getByIDAndMatchStartDate(UUID id, Date matchStartDate) {
-        return null;
+        ScoreboardIndex scoreboardIndex = new ScoreboardIndex(id, matchStartDate);
+        return tableScoreboard.get(scoreboardIndex);
     }
 
     public List<Match> getAll() {
-        return null;
+        List<Match> allMatches = new ArrayList<>();
+        for (Map.Entry<ScoreboardIndex, Match> entry : tableScoreboard.entrySet()) {
+            allMatches.add(entry.getValue());
+        }
+        return allMatches;
     }
 }
