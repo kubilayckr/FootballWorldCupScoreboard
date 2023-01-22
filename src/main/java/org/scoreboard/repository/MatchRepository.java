@@ -1,10 +1,13 @@
 package org.scoreboard.repository;
 
+import org.scoreboard.exception.BusinessException;
 import org.scoreboard.mapper.MatchMapper;
 import org.scoreboard.model.entity.Match;
 import org.scoreboard.util.DBUtil;
 
 import java.util.*;
+
+import static org.scoreboard.exception.BusinessException.ServiceException.MATCH_NOT_FOUND;
 
 public class MatchRepository {
 
@@ -34,7 +37,11 @@ public class MatchRepository {
     }
 
     public Match getById(UUID id) {
-        return tableMatch.get(id);
+        Match match = tableMatch.get(id);
+        if (match == null) {
+            throw new BusinessException(MATCH_NOT_FOUND.getKey());
+        }
+        return match;
     }
 
     public List<Match> getAll() {
