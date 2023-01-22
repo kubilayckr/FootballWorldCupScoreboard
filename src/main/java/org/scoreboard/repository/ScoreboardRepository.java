@@ -1,11 +1,14 @@
 package org.scoreboard.repository;
 
+import org.scoreboard.exception.BusinessException;
 import org.scoreboard.mapper.MatchMapper;
 import org.scoreboard.model.entity.Match;
 import org.scoreboard.model.index.ScoreboardIndex;
 import org.scoreboard.util.DBUtil;
 
 import java.util.*;
+
+import static org.scoreboard.exception.BusinessException.ServiceException.MATCH_NOT_FOUND;
 
 public class ScoreboardRepository {
 
@@ -38,7 +41,11 @@ public class ScoreboardRepository {
 
     public Match getByIDAndMatchStartDate(UUID id, Date matchStartDate) {
         ScoreboardIndex scoreboardIndex = new ScoreboardIndex(id, matchStartDate);
-        return tableScoreboard.get(scoreboardIndex);
+        Match match = tableScoreboard.get(scoreboardIndex);
+        if (match == null) {
+            throw new BusinessException(MATCH_NOT_FOUND.getKey());
+        }
+        return match;
     }
 
     public List<Match> getAll() {
